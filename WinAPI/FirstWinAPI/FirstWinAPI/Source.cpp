@@ -19,25 +19,40 @@ LPCTSTR lpszClass = TEXT("First");	// 윈도우 클래스를 정의하는데 사용됨
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 
 	HWND hWnd; // 윈도우 핸들
-	WNDCLASS WndClass;
+	WNDCLASSEX WndClass;
 	MSG Message;
 
 	g_hInst = hInstance;
-	WndClass.cbClsExtra = 0;
-	WndClass.cbWndExtra = 0;
-	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	WndClass.hInstance = hInstance; 
-	WndClass.lpfnWndProc = WndProc;
-	WndClass.lpszClassName = lpszClass;
-	WndClass.lpszMenuName = NULL;
-	WndClass.style = CS_HREDRAW | CS_VREDRAW;
-	RegisterClass(&WndClass);
 
-	hWnd = CreateWindow(lpszClass, lpszClass, WS_EX_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-		NULL, (HMENU)NULL, hInstance, NULL);
+	WndClass.cbSize = sizeof(WNDCLASSEX);
+	WndClass.cbClsExtra = 0;										// 클래스와 윈도우를 위한 여분의 메모리 크기 
+	WndClass.cbWndExtra = 0;										//	``
+	WndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);	// 윈도우의 배경색
+	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);					// 기본 커서
+	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);				// 기본 아이콘
+	WndClass.hInstance = hInstance;									// 메인 함수에 첫번째 매개변수로 넘어온 인스턴스 값
+	WndClass.lpfnWndProc = WndProc;									// 메시지 처리에 사용될 함수의 이름 기재
+	WndClass.lpszClassName = lpszClass;								// 윈도우 클래스의 이름
+	WndClass.lpszMenuName = lpszClass;								// 메뉴의 이름
+	WndClass.style = WS_OVERLAPPEDWINDOW| CS_HREDRAW | CS_VREDRAW;// | WS_OVERLAPPEDWINDOW;						// 윈도우가 출력되는 형태
+	WndClass.hIconSm = LoadIcon(NULL,IDI_APPLICATION);
+
+	RegisterClassEx(&WndClass);										// 커널에 윈도우 클래스 등록
+
+	hWnd = CreateWindow(
+		lpszClass, 
+		lpszClass, 
+		WS_EX_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 
+		CW_USEDEFAULT, 
+		CW_USEDEFAULT, 
+		CW_USEDEFAULT,
+		NULL, 
+		(HMENU)NULL, 
+		hInstance, 
+		NULL
+	);
+
 	ShowWindow(hWnd, nCmdShow);
 
 	while (GetMessage(&Message, NULL, 0, 0)) {
@@ -50,6 +65,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam) {
 	switch (iMessage) {
+	case WM_CREATE :
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;

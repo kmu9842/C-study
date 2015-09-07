@@ -27,5 +27,8 @@
     <ClCompile Include="4th.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="5th.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
