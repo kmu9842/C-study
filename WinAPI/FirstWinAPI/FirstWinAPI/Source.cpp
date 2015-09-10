@@ -34,26 +34,26 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.lpfnWndProc = WndProc;									// 메시지 처리에 사용될 함수의 이름 기재
 	WndClass.lpszClassName = lpszClass;								// 윈도우 클래스의 이름
 	WndClass.lpszMenuName = lpszClass;								// 메뉴의 이름
-	WndClass.style = WS_OVERLAPPEDWINDOW| CS_HREDRAW | CS_VREDRAW;// | WS_OVERLAPPEDWINDOW;						// 윈도우가 출력되는 형태
+	WndClass.style = CS_HREDRAW | CS_VREDRAW;// | WS_OVERLAPPEDWINDOW;						// 윈도우가 출력되는 형태
 	WndClass.hIconSm = LoadIcon(NULL,IDI_APPLICATION);
 
 	RegisterClassEx(&WndClass);										// 커널에 윈도우 클래스 등록
 
-	hWnd = CreateWindow(
-		lpszClass, 
-		lpszClass, 
-		WS_EX_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 
-		CW_USEDEFAULT, 
-		CW_USEDEFAULT, 
-		CW_USEDEFAULT,
-		NULL, 
-		(HMENU)NULL, 
-		hInstance, 
-		NULL
+	hWnd = CreateWindow(		// 윈도우 생성 함수
+		lpszClass,				// 윈도우 클래스 이름
+		lpszClass,				// 윈도우 타이틀 이름
+		WS_OVERLAPPEDWINDOW,	// 윈도우 스타일
+		CW_USEDEFAULT,			// 윈도우 위치 X좌표
+		CW_USEDEFAULT,			// 윈도우 위치 Y좌표
+		CW_USEDEFAULT,			// 윈도우 가로 크기
+		CW_USEDEFAULT,			// 윈도우 세로 크기
+		NULL,					// 부모 윈도우 핸들
+		(HMENU)NULL,			// 메뉴 핸들
+		hInstance,				// 응용프로그램 인스턴스
+		NULL					// 생성 윈도우 정보
 	);
 
-	ShowWindow(hWnd, nCmdShow);
+	ShowWindow(hWnd, nCmdShow); // 윈도우를 화면에 보여줌
 
 	while (GetMessage(&Message, NULL, 0, 0)) {
 		TranslateMessage(&Message);
@@ -63,12 +63,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam) {
+// 메세지 처리 함수
+LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam) { 
 	switch (iMessage) {
-	case WM_CREATE :
+	case WM_CREATE :	// 생성 이벤트시 호출
 		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
+	case WM_DESTROY:	// 종료 이벤트시 호출
+		PostQuitMessage(0); // 종료
 		return 0;
 	}
 
