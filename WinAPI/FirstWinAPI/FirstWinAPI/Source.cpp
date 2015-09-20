@@ -1,4 +1,7 @@
-#include <windows.h>
+/*#include <windows.h>
+
+// 이벤트 드리븐 방식 = 이벤트 기반 방식
+// 메세지 드리븐 방식 = 메세지 기반 방식
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); // 사용자와 시스템이 보내오는 메시지를 처리하는 역할
 // WndProc와 WinMain둘다 필수 함수
@@ -34,12 +37,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.lpfnWndProc = WndProc;									// 메시지 처리에 사용될 함수의 이름 기재
 	WndClass.lpszClassName = lpszClass;								// 윈도우 클래스의 이름
 	WndClass.lpszMenuName = lpszClass;								// 메뉴의 이름
-	WndClass.style = CS_HREDRAW | CS_VREDRAW;// | WS_OVERLAPPEDWINDOW;						// 윈도우가 출력되는 형태
+	WndClass.style = CS_HREDRAW | CS_VREDRAW;						// 윈도우가 출력되는 형태
 	WndClass.hIconSm = LoadIcon(NULL,IDI_APPLICATION);
 
 	RegisterClassEx(&WndClass);										// 커널에 윈도우 클래스 등록
 
-	hWnd = CreateWindow(		// 윈도우 생성 함수
+	hWnd = CreateWindow(		// 윈도우 생성 함수, 보여주지는 않음, false가 뜰경우 종료
 		lpszClass,				// 윈도우 클래스 이름
 		lpszClass,				// 윈도우 타이틀 이름
 		WS_OVERLAPPEDWINDOW,	// 윈도우 스타일
@@ -55,7 +58,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 
 	ShowWindow(hWnd, nCmdShow); // 윈도우를 화면에 보여줌
 
-	while (GetMessage(&Message, NULL, 0, 0)) {
+	while (GetMessage(&Message, NULL, 0, 0)) { // 메세지 받아오기
 		TranslateMessage(&Message);
 		DispatchMessage(&Message);
 	}
@@ -68,10 +71,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam)
 	switch (iMessage) {
 	case WM_CREATE :	// 생성 이벤트시 호출
 		break;
+	case WM_PAINT :
+		HDC hdc = hWnd;
+		TextOut(,);
+		break;
 	case WM_DESTROY:	// 종료 이벤트시 호출
 		PostQuitMessage(0); // 종료
 		return 0;
 	}
 
 	return (DefWindowProc(hWnd, iMessage, wParam, IParam));
-}
+}*/
