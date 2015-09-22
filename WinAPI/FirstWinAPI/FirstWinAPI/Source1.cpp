@@ -20,9 +20,6 @@ LPCTSTR lpszClass = TEXT("First");	// 윈도우 클래스를 정의하는데 사용됨
 									// 인스턴스라는 말은 실행중인 프로그램 하나를 칭하는 용어이다.
 									// 프로그램 내부에서 자신을 가리키는 1인칭 대명사 같은것
 
- int count = 0;
- char str[100];
-
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 
 	HWND hWnd; // 윈도우 핸들
@@ -74,42 +71,99 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	RECT rect;
 
-	LPCWSTR a = TEXT("Hello World ");
+	int x = 0, y = 0;
+	static int count = 0;
+	static int cursorPos = 0;
+	static int lastLSize = 0;
+	static char str[200];
 
-	
+	POINT point[5] = { {200,20},{ 250,50 },{ 500,100 },{ 400,200 },{ 200,200 } };
+
+	LPCSTR a;
+	SIZE size;
 
 	switch (iMessage) {
 	case WM_CREATE:	// 생성 이벤트시 호출
+		CreateCaret(hWnd, NULL, 5, 15);
+		ShowCaret(hWnd);
 		count = 0;
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd,&ps);
-		TextOut(hdc, 100, 100, (LPCWSTR)str, strlen(str) - 1);
-		rect.left = 50;
-		rect.top = 40;
-		rect.right = 200;
-		rect.bottom = 120;
-		 
-		DrawText(hdc,a,11,&rect,DT_SINGLELINE|DT_CENTER);
+
+		for (int i = 0;i<count;i++) {
+			if (str[i] == '\n') {
+				y+=20;
+				x = 0;
+				SetCaretPos(x, y);
+			}
+			else {
+				a = &str[i];
+				TextOutA(hdc, x, y, a, 1);
+				GetTextExtentPointA(hdc,&str[i],1,&size);
+				lastLSize = size.cx;
+				x += size.cx;
+				cursorPos++;
+				SetCaretPos(x,y);
+			}
+		}
+
+		if (count == 0) {
+			x = 0;
+			y = 0;
+			SetCaretPos(x, y);
+		}
+
+		MoveToEx(hdc,100,100,NULL);
+		LineTo(hdc,150,150);
+
+		Ellipse(hdc,0,0,40,40);
+
+		Rectangle(hdc,50,50,80,80);
+
+		Polygon(hdc,point,5);
 
 		EndPaint(hWnd,&ps);
 
 		break;
 	case WM_KEYDOWN :
-		hdc = GetDC(hWnd); // 윈도우의 크기가 변하거나 감추어질경우 출력된 내용이 사라진다
-		TextOut(hdc, 0, 0, a, 11);
-		ReleaseDC(hWnd, hdc);
+
+		if (wParam == VK_BACK && count>0) {
+			count--;
+			cursorPos--;
+		}
+
+		else if (wParam == VK_RIGHT) {
+			cursorPos++;
+		}
+
+		else if (wParam == VK_LEFT) {
+			cursorPos--;
+		}
+
+		else if (wParam == VK_RETURN) {
+			str[count++] = '\n';
+			str[count] = '\0';
+		}
+		else {
+			if (wParam != '\b') {
+				str[count++] = wParam;
+			}
+			cursorPos++;
+			str[count] = '\0';
+		}
+
+		// 화면 영역 수정 함수 (수정될 영역이 포함된 윈도우의 핸들값, 수정될 영역에 대한 핸들값(NULL값은 전체), 모두 삭제 할지 삭제하지 않고 수정되는 부분만 추가 할지)
+		// WM_PAINT를 다시 호출하는것
+		InvalidateRgn(hWnd, NULL, true);
+
 		break;
 
 	case WM_CHAR :
-		hdc = GetDC(hWnd); // 윈도우의 크기가 변하거나 감추어질경우 출력된 내용이 사라진다
 		
-		str[count++] = wParam;
-		str[count] = '\0';
-		TextOut(hdc, 100, 100, (LPCWSTR)str, strlen(str)-1);
-		ReleaseDC(hWnd, hdc);
+		
+
 		break;
 
 	case WM_DESTROY:	// 종료 이벤트시 호출
