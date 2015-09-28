@@ -1,4 +1,4 @@
-/*#include <windows.h>
+#include <windows.h>
 
 // 이벤트 드리븐 방식 = 이벤트 기반 방식
 // 메세지 드리븐 방식 = 메세지 기반 방식
@@ -72,87 +72,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam)
 	HDC hdc;
 	PAINTSTRUCT ps;
 
-	int x = 0, y = 0;
-	static int count = 0;
-	static int cursorPos = 0;
-	static int lastLSize = 0;
-	static char str[200];
-
-	POINT point[5] = { {200,20},{ 250,50 },{ 500,100 },{ 400,200 },{ 200,200 } };
-
-	LPCSTR a;
-	SIZE size;
+	HBRUSH MyBrush;
+	HPEN MyPen;
 
 	switch (iMessage) {
 	case WM_CREATE:	// 생성 이벤트시 호출
 		CreateCaret(hWnd, NULL, 5, 15);
 		ShowCaret(hWnd);
-		count = 0;
 		break;
 	case WM_PAINT:
-		hdc = BeginPaint(hWnd,&ps);
+		hdc = BeginPaint(hWnd, &ps);
 
-		for (int i = 0;i<count;i++) {
-			if (str[i] == '\n') {
-				y+=20;
-				x = 0;
-				SetCaretPos(x, y);
-			}
-			else {
-				a = &str[i];
-				TextOutA(hdc, x, y, a, 1);
-				GetTextExtentPointA(hdc,&str[i],1,&size);
-				lastLSize = size.cx;
-				x += size.cx;
-				cursorPos++;
-				SetCaretPos(x,y);
-			}
-		}
+		MyPen = CreatePen(PS_DOT,1, RGB(255, 0, 0)); // 펜 정보 생성
+		MyBrush = CreateSolidBrush(RGB(0,0,255));	 // 브러쉬 정보 생성
 
-		if (count == 0) {
-			x = 0;
-			y = 0;
-			SetCaretPos(x, y);
-		}
+		SelectObject(hdc, MyPen);				// 팬정보 선택(무슨 팬으로 그릴지)
+		SelectObject(hdc, MyBrush);				// 브러쉬 정보 선택
 
-		MoveToEx(hdc,100,100,NULL);
-		LineTo(hdc,150,150);
+		Ellipse(hdc, 0, 0, 100, 100);			// 원 그리기
+		Rectangle(hdc, 200, 200, 400, 400);		// 사각형 그리기
 
-		Ellipse(hdc,0,0,40,40);
+		DeleteObject(MyPen);					// 팬 정보도 메모리를 잡기 때문에 해제해 주어야함
+		DeleteObject(MyBrush); 
 
-		Rectangle(hdc,50,50,80,80);
-
-		Polygon(hdc,point,5);
-
-		EndPaint(hWnd,&ps);
+		EndPaint(hWnd, &ps);
 
 		break;
-	case WM_KEYDOWN :
-
-		if (wParam == VK_BACK && count>0) {
-			count--;
-			cursorPos--;
-		}
-
-		else if (wParam == VK_RIGHT) {
-			cursorPos++;
-		}
-
-		else if (wParam == VK_LEFT) {
-			cursorPos--;
-		}
-
-		else if (wParam == VK_RETURN) {
-			str[count++] = '\n';
-			str[count] = '\0';
-		}
-		else {
-			if (wParam != '\b') {
-				str[count++] = wParam;
-			}
-			cursorPos++;
-			str[count] = '\0';
-		}
+	case WM_KEYDOWN:
 
 		// 화면 영역 수정 함수 (수정될 영역이 포함된 윈도우의 핸들값, 수정될 영역에 대한 핸들값(NULL값은 전체), 모두 삭제 할지 삭제하지 않고 수정되는 부분만 추가 할지)
 		// WM_PAINT를 다시 호출하는것
@@ -160,9 +106,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam)
 
 		break;
 
-	case WM_CHAR :
-		
-		
+	case WM_CHAR:
 
 		break;
 
@@ -172,4 +116,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam)
 	}
 
 	return (DefWindowProc(hWnd, iMessage, wParam, IParam));
-}*/
+}
