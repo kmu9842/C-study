@@ -89,7 +89,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
-		MyBrush1 = CreateSolidBrush(RGB(255, 255, 255));	 // 브러쉬 정보 생성
+		MyBrush1 = CreateSolidBrush(RGB(255, 254, 255));	 // 브러쉬 정보 생성
 		MyBrush2 = CreateSolidBrush(RGB(255, 0, 0));	 // 브러쉬 정보 생성
 
 		if (flag[0]) SelectObject(hdc,MyBrush2);
@@ -100,6 +100,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 		if (flag[1]) SelectObject(hdc, MyBrush2);
 		else SelectObject(hdc, MyBrush1);
+
 		Rectangle(hdc, 0, 200, 100, 400);
 		DrawTextA(hdc, a[0], 4, &rt[0], DT_CENTER | DT_WORDBREAK);
 
@@ -110,6 +111,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 		if (flag[3]) SelectObject(hdc, MyBrush2);
 		else SelectObject(hdc, MyBrush1);
+
 		Rectangle(hdc, 100, 400, 200, 600);
 		DrawTextA(hdc, a[3], 6, &rt[3], DT_CENTER | DT_WORDBREAK);
 		
