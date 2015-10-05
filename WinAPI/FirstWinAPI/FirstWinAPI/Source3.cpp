@@ -1,4 +1,6 @@
-/*#include <windows.h>
+#include <windows.h>
+
+int flag[4] = { 0, };
 
 // 이벤트 드리븐 방식 = 이벤트 기반 방식
 // 메세지 드리븐 방식 = 메세지 기반 방식
@@ -19,7 +21,6 @@ LPCTSTR lpszClass = TEXT("First");	// 윈도우 클래스를 정의하는데 사용됨
 
 									// 인스턴스라는 말은 실행중인 프로그램 하나를 칭하는 용어이다.
 									// 프로그램 내부에서 자신을 가리키는 1인칭 대명사 같은것
-
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 
 	HWND hWnd; // 윈도우 핸들
@@ -68,52 +69,93 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 }
 
 // 메세지 처리 함수
-LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam) {
+LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 
 	HBRUSH MyBrush1, MyBrush2;
-	HPEN MyPen;
-	POINT point[5] = { { 200,20 },{ 250,50 },{ 500,100 },{ 400,200 },{ 200,200 } };
+	RECT rt[4] = { {0, 290, 100, 310},
+	{ 200, 290, 300, 310 },
+	{ 100, 90, 200, 110 },
+	{ 100, 490, 200, 510 } };
+	
+	char a[4][10] = {"왼쪽","오른쪽","위쪽","아래쪽"};
+
+	//flag[2] = 1;
 
 	switch (iMessage) {
 	case WM_CREATE:	// 생성 이벤트시 호출
-		//CreateCaret(hWnd, NULL, 5, 15);
-		//ShowCaret(hWnd);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
-		MyPen = CreatePen(PS_COSMETIC,2, RGB(255, 0, 0)); // 펜 정보 생성
-		MyBrush1 = CreateSolidBrush(RGB(0,0,255));	 // 브러쉬 정보 생성
-		MyBrush2 = CreateSolidBrush(RGB(0, 255, 0));	 // 브러쉬 정보 생성
+		MyBrush1 = CreateSolidBrush(RGB(255, 255, 255));	 // 브러쉬 정보 생성
+		MyBrush2 = CreateSolidBrush(RGB(255, 0, 0));	 // 브러쉬 정보 생성
 
-		SelectObject(hdc, MyPen);				// 팬정보 선택(무슨 팬으로 그릴지)
-		SelectObject(hdc, MyBrush1);				// 브러쉬 정보 선택
+		if (flag[0]) SelectObject(hdc,MyBrush2);
+		else SelectObject(hdc,MyBrush1);
 
-		Ellipse(hdc, 0, 0, 100, 100);			// 원 그리기
-		Rectangle(hdc, 220, 220, 400, 400);		// 사각형 그리기
+		Rectangle(hdc, 100, 0, 200, 200);
+		DrawTextA(hdc, a[2], 4, &rt[2], DT_CENTER | DT_WORDBREAK);
 
-		SelectObject(hdc, MyBrush2);				// 브러쉬 정보 선택
-		Polygon(hdc, point, 5);
+		if (flag[1]) SelectObject(hdc, MyBrush2);
+		else SelectObject(hdc, MyBrush1);
+		Rectangle(hdc, 0, 200, 100, 400);
+		DrawTextA(hdc, a[0], 4, &rt[0], DT_CENTER | DT_WORDBREAK);
 
-		DeleteObject(MyPen);					// 팬 정보도 메모리를 잡기 때문에 해제해 주어야함
-		DeleteObject(MyBrush1); 
-		DeleteObject(MyBrush2);
+		if (flag[2]) SelectObject(hdc, MyBrush2);
+		else SelectObject(hdc, MyBrush1);
+		Rectangle(hdc, 200, 200, 300, 400);
+		DrawTextA(hdc, a[1], 6, &rt[1], DT_CENTER | DT_WORDBREAK);
 
+		if (flag[3]) SelectObject(hdc, MyBrush2);
+		else SelectObject(hdc, MyBrush1);
+		Rectangle(hdc, 100, 400, 200, 600);
+		DrawTextA(hdc, a[3], 6, &rt[3], DT_CENTER | DT_WORDBREAK);
+		
 		EndPaint(hWnd, &ps);
-
 		break;
+
 	case WM_KEYDOWN:
+		switch (wParam) {
+		case VK_RIGHT:
+			flag[2] = true;
+			break;
+		case VK_LEFT:
+			flag[1] = true;
+			break;
+		case VK_UP:
+			flag[0] = true;
+			break;
+		case VK_DOWN:
+			flag[3] = true;
+			break;
+		default:
+			break;
+		}
 
-		// 화면 영역 수정 함수 (수정될 영역이 포함된 윈도우의 핸들값, 수정될 영역에 대한 핸들값(NULL값은 전체), 모두 삭제 할지 삭제하지 않고 수정되는 부분만 추가 할지)
-		// WM_PAINT를 다시 호출하는것
-		//InvalidateRgn(hWnd, NULL, true);
-
+		InvalidateRgn(hWnd, NULL, true);
 		break;
 
-	case WM_CHAR:
+	case WM_KEYUP:
+		switch (wParam) {
+		case VK_RIGHT:
+			flag[2] = false;
+			break;
+		case VK_LEFT:
+			flag[1] = false;
+			break;
+		case VK_UP:
+			flag[0] = false;
+			break;
+		case VK_DOWN:
+			flag[3] = false;
+			break;
+		default:
+			break;
+		}
 
+		InvalidateRgn(hWnd, NULL, true);
 		break;
 
 	case WM_DESTROY:	// 종료 이벤트시 호출
@@ -121,5 +163,5 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam)
 		return 0;
 	}
 
-	return (DefWindowProc(hWnd, iMessage, wParam, IParam));
-}*/
+	return (DefWindowProc(hWnd, iMessage, wParam, lParam));
+}
