@@ -1,4 +1,4 @@
-#include <windows.h>
+/*#include <windows.h>
 
 int flag[4] = { 0, };
 
@@ -166,4 +166,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	}
 
 	return (DefWindowProc(hWnd, iMessage, wParam, lParam));
-}
+}*/
