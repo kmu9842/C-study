@@ -1,4 +1,5 @@
 //#include <windows.h>
+//#include <math.h>
 //
 //// 이벤트 드리븐 방식 = 이벤트 기반 방식
 //// 메세지 드리븐 방식 = 메세지 기반 방식
@@ -67,13 +68,17 @@
 //}
 //
 //// 메세지 처리 함수
-//LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM IParam) {
+//LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 //	HDC hdc;
 //	PAINTSTRUCT ps;
 //
-//	RECT lp = {0,0,0,0};
+//	RECT lp = { 0,0,0,0 };
 //
-//	static int x = 0, y = 0;
+//	static int x = 40, y = 40, mx, my;
+//	static bool sw;
+//
+//	HPEN pens;
+//	HBRUSH brush;
 //
 //	switch (iMessage) {
 //	case WM_CREATE:	// 생성 이벤트시 호출
@@ -81,56 +86,66 @@
 //	case WM_PAINT:
 //		hdc = BeginPaint(hWnd, &ps);
 //
-//		Ellipse(hdc, x, y, x+100, y+100);			// 원 그리기
+//		if (sw) {
+//			Rectangle(hdc, x, y, x + 80, y + 80);
+//
+//			brush = CreateSolidBrush(RGB(0,0,0));
+//			pens = CreatePen(PS_SOLID,1,RGB(255, 0, 0));
+//
+//			SelectObject(hdc, pens);
+//			SelectObject(hdc, brush);
+//
+//			Ellipse(hdc, x, y, x + 80, y + 80);			// 원 그리기
+//
+//			DeleteObject(pens);
+//			DeleteObject(brush);
+//		}
+//
+//		else {
+//			Ellipse(hdc, x, y, x + 80, y + 80);			// 원 그리기
+//		}
+//		
 //
 //		EndPaint(hWnd, &ps);
 //		break;
+//
 //	case WM_SIZE:
-//		switch (wParam) {
-//		case SIZE_RESTORED :
-//			GetClientRect(hWnd, &lp);
-//			if (x+100 >=lp.right) {
-//				x = lp.right-100;
-//			}
-//			else if (y+100 >= lp.bottom) {
-//				y = lp.bottom - 100;
-//			}
-//			break;
-//		}
-//
-//		InvalidateRgn(hWnd, NULL, true);
 //		break;
+//
 //	case WM_KEYDOWN:
-//		GetClientRect(hWnd, &lp);
-//		switch(wParam){
-//		case VK_RIGHT:
-//			if (x + 100 < lp.right) {
-//				x += 10;
-//			}
-//			break;
-//		case VK_LEFT:
-//			if (x > lp.left) {
-//				x -= 10;
-//			}
-//			break;
-//		case VK_DOWN:
-//			if (y + 100 < lp.bottom) {
-//				y += 10;
-//			}
-//			break;
-//		case VK_UP:
-//			if (y > lp.top) {
-//				y -= 10;
-//			}
-//			break;
+//		break;
+//
+//	case WM_LBUTTONDOWN:
+//		mx = LOWORD(lParam);
+//		my = HIWORD(lParam);
+//
+//		if (80>=sqrt(pow(mx-x,2)+pow(my-y,2))) {
+//			sw = true;
 //		}
 //
 //		InvalidateRgn(hWnd, NULL, true);
 //		break;
+//	case WM_LBUTTONUP:
+//		sw = false;
+//		InvalidateRgn(hWnd, NULL, true);
+//		break;
+//
+//	case WM_MOUSEMOVE:
+//		if (sw) {
+//			mx = LOWORD(lParam);
+//			my = HIWORD(lParam);
+//
+//			x = mx;
+//			y = my;
+//		}
+//		InvalidateRgn(hWnd, NULL, true);
+//
+//		break;
+//
 //	case WM_DESTROY:	// 종료 이벤트시 호출
 //		PostQuitMessage(0); // 종료
 //		return 0;
 //	}
 //
-//	return (DefWindowProc(hWnd, iMessage, wParam, IParam));
+//	return (DefWindowProc(hWnd, iMessage, wParam, lParam));
 //}
