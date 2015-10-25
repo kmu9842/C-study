@@ -1,37 +1,29 @@
-//#pragma once
-//
-//#include <fstream>
-//#include <iostream>
-//
-//int FileRead(char** exp) {
-//	int i;
-//	std::ifstream in("in.txt");
-//
-//	for (i = 0;; i++) {
-//		exp[i] = (char*)malloc(sizeof(char));
-//		in >> exp[i];
-//
-//		if (*exp[i] == NULL) {
-//			break;
-//		}
-//	}
-//
-//	in.close();
-//
-//	return i;
-//}
-//
-//void FileWrite(int * res) {
-//	std::ofstream out("out.txt");
-//
-//	out << *res;
-//}
-//
-//void main() {
-//	char* exp[100] = {0,};
-//
-//	int totalline = 0;
-//
-//	totalline = FileRead(exp);
-//	FileWrite(&totalline);
-//}
+
+#pragma once
+
+#include "Header1.h"
+#include "Header.h"
+#include "Header2.h"
+
+void main() {
+	char *exp1[100];
+	char *exp2[100] = {0,};
+	int Result[100];
+	int Totalline = 0;
+
+	Totalline = FileRead(exp1);
+	for (int i = 0; i < Totalline; i++)
+		printf("%s\n", exp1[i]);
+
+	PostExp(exp1, exp2);
+	for (int i = 0; i < Totalline; i++)
+		printf("%s\n", exp2[i]);
+
+	ResultfromData(exp2, Result);
+	for (int i = 0; i < Totalline; i++)
+		printf("%d\n", Result[i]);
+
+	FileWrite(Result);
+
+	return;
+}

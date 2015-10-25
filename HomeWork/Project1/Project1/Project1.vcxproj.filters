@@ -51,9 +51,21 @@
     <ClCompile Include="Source10.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header1.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header2.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
