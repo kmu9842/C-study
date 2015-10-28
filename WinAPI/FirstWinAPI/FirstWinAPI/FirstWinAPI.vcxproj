@@ -80,6 +80,8 @@
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Source1.cpp" />
+    <ClCompile Include="Source10.cpp" />
+    <ClCompile Include="Source11.cpp" />
     <ClCompile Include="Source2.cpp" />
     <ClCompile Include="Source3.cpp" />
     <ClCompile Include="Source4.cpp" />
@@ -88,6 +90,12 @@
     <ClCompile Include="Source7.cpp" />
     <ClCompile Include="Source8.cpp" />
     <ClCompile Include="Source9.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
