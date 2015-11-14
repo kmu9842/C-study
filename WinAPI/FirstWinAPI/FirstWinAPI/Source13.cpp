@@ -1,5 +1,4 @@
 //#include <windows.h>
-//#include <math.h>
 //#include <string>
 //
 //#include "resource.h"
@@ -40,7 +39,7 @@
 //	WndClass.hInstance = hInstance;									// 메인 함수에 첫번째 매개변수로 넘어온 인스턴스 값
 //	WndClass.lpfnWndProc = WndProc;									// 메시지 처리에 사용될 함수의 이름 기재
 //	WndClass.lpszClassName = lpszClass;								// 윈도우 클래스의 이름
-//	WndClass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);				// 메뉴의 이름
+//	WndClass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);								// 메뉴의 이름
 //	WndClass.style = CS_HREDRAW | CS_VREDRAW;						// 윈도우가 출력되는 형태
 //	WndClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 //
@@ -70,99 +69,132 @@
 //	return (int)Message.wParam;
 //}
 //
-//#include <math.h>
-//#define BSIZE 20
-//double LengthPts(int x1, int y1, int x2, int y2)
-//{
-//	return(sqrt((float)((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1))));
+//enum {
+//	PEN = 1, BRUSH, LINE = 1, ELLIPSE = 2, RECTANGLE = 3
+//};
+//
+//COLORREF ColorSelection(HWND hWnd, int kind) {
+//	int i;
+//	COLORREF tmp[16], Color;
+//	CHOOSECOLOR COLOR;
+//	for (i = 0; i < 16; i++) {
+//		tmp[i] = RGB(rand() % 256, rand() % 256, rand() % 256);
+//	}
+//	memset(&COLOR, 0, sizeof(CHOOSECOLOR));
+//	COLOR.lStructSize = sizeof(CHOOSECOLOR);
+//	COLOR.hwndOwner = hWnd;
+//	COLOR.lpCustColors = tmp;
+//	COLOR.Flags = CC_FULLOPEN;
+//	if (ChooseColor(&COLOR) != 0) {
+//		Color = COLOR.rgbResult;
+//		return RGB(GetRValue(Color) ^ 255, GetGValue(Color) ^ 255, GetBValue(Color) ^ 255);
+//	}
+//	else {
+//		switch (kind) {
+//		case PEN:
+//			return RGB(255, 255, 255);
+//			break;
+//		case BRUSH:
+//			return RGB(0, 0, 0);
+//			break;
+//		}
+//	}
 //}
 //
-//BOOL InCircle(int x, int y, int mx, int my)
-//{
-//	if (LengthPts(x, y, mx, my) < BSIZE) return TRUE;
-//	else return FALSE;
-//}
-//
-//LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg,
-//	WPARAM wParam, LPARAM lParam)
-//{
+//LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 //	HDC hdc;
 //	PAINTSTRUCT ps;
-//	static HMENU hMenu, hSubMenu;
-//	int mx, my;
-//	static bool Select;
-//	static bool Copy;
-//	static int xy[10][2] = {0,};
-//	static int x, y;
-//	static int max;
 //
-//	bool sw = false;
+//	static HPEN hPen, oldPen;
+//	static HBRUSH hBrush, oldBrush;
+//	static int object_mode, color_mode, startX, startY, oldX, oldY;
+//	static BOOL Drag;
 //
-//	switch (iMsg)
-//	{
+//	int endX, endY;
+//
+//	switch (iMsg) {
 //	case WM_CREATE:
-//		hMenu = GetMenu(hwnd);
-//		hSubMenu = GetSubMenu(hMenu, 1);
-//		Select = FALSE;
-//		Copy = FALSE;
-//		xy[0][0] = 50;	xy[0][1] = 50;
-//		max = 1;
+//		object_mode = 0;
+//		color_mode = 0;
+//		Drag = FALSE;
+//		hPen = (HPEN)GetStockObject(WHITE_PEN);
+//		hBrush = (HBRUSH)GetStockObject(BLACK_BRUSH);
+//		break;
 //
-//		EnableMenuItem(hMenu, ID_EDITCOPY, MF_GRAYED);
-//		EnableMenuItem(hMenu, ID_EDITPASTE, MF_GRAYED);
-//
-//		return 0;
 //	case WM_PAINT:
-//		EnableMenuItem(hMenu, ID_EDITCOPY,
-//			Select ? MF_ENABLED : MF_GRAYED);
-//		EnableMenuItem(hMenu, ID_EDITPASTE,
-//			Copy ? MF_ENABLED : MF_GRAYED);
-//		hdc = BeginPaint(hwnd, &ps);
-//		if (Select)
-//			Rectangle(hdc, x - BSIZE, y - BSIZE, x + BSIZE, y + BSIZE);
-//
-//		for (int i = 0; i < max;i++) {
-//			Ellipse(hdc, xy[i][0] - BSIZE, xy[i][1] - BSIZE, xy[i][0] + BSIZE, xy[i][1] + BSIZE);
-//		}
-//		EndPaint(hwnd, &ps);
-//		return 0;
-//	case WM_COMMAND:
-//		if (LOWORD(wParam) == ID_EDITCOPY)
-//		{
-//			Copy = true;
-//			InvalidateRgn(hwnd, NULL, TRUE);
-//		}
-//		if (LOWORD(wParam) == ID_EDITPASTE && max<=10) {
-//			xy[max][0] = xy[max - 1][0] + 50;
-//			xy[max][1] = xy[max - 1][1] + 50;
-//			max++;
-//			InvalidateRgn(hwnd, NULL, TRUE);
-//		}
-//		if (LOWORD(wParam) == ID_CANCLE) {
-//			Select = false;
-//			Copy = false;
-//			InvalidateRgn(hwnd, NULL, TRUE);
-//		}
+//		hdc = BeginPaint(hWnd, &ps);
+//		EndPaint(hWnd, &ps);
 //		break;
+//
 //	case WM_LBUTTONDOWN:
-//		mx = LOWORD(lParam);
-//		my = HIWORD(lParam);
-//
-//		for (int i = 0; i < max; i++) {
-//			if (InCircle(xy[i][0], xy[i][1], mx, my)) {
-//				Select = true;
-//				x = xy[i][0];
-//				y = xy[i][1];
-//				break;
-//				sw = true;
-//			}
-//		}
-//
-//		InvalidateRgn(hwnd, NULL, TRUE);
+//		startX = oldX = LOWORD(lParam);
+//		startY = oldY = HIWORD(lParam);
+//		Drag = TRUE;
 //		break;
+//
+//	case WM_LBUTTONUP:
+//		Drag = FALSE;
+//		break;
+//
+//	case WM_MOUSEMOVE:
+//		hdc = GetDC(hWnd);
+//		if (Drag) {
+//			SetROP2(hdc, R2_XORPEN);
+//			oldPen = (HPEN)SelectObject(hdc, hPen);
+//			oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+//			endX = LOWORD(lParam);
+//			endY = HIWORD(lParam);
+//			switch (object_mode){
+//			case LINE:
+//				MoveToEx(hdc, startX, startY, NULL);
+//				LineTo(hdc, oldX, oldY);
+//				MoveToEx(hdc, startX, startY, NULL);
+//				LineTo(hdc, endX, endY);
+//				break;
+//
+//			case ELLIPSE:
+//				Ellipse(hdc, startX, startY, oldX, oldY);
+//				Ellipse(hdc, startX, startY, endX, endY);
+//				break;
+//
+//			case RECTANGLE:
+//				Rectangle(hdc, startX, startY, oldX, oldY);
+//				Rectangle(hdc, startX, startY, endX, endY);
+//				break;
+//			}
+//			oldX = endX; oldY = endY;
+//			SelectObject(hdc, oldPen);
+//			SelectObject(hdc, oldBrush);
+//		}
+//		ReleaseDC(hWnd, hdc);
+//		break;
+//
+//	case WM_COMMAND:
+//		switch (LOWORD(wParam)){
+//		case ID_LINE:
+//			object_mode = LINE;
+//			break;
+//		case ID_ELLIPSE:
+//			object_mode = ELLIPSE;
+//			break;
+//		case ID_RECTANGLE:
+//			object_mode = RECTANGLE;
+//			break;
+//		case ID_PENCOLOR:
+//			color_mode = PEN;
+//			hPen = CreatePen(PS_SOLID, 1, ColorSelection(hWnd, color_mode));
+//			break;
+//		case ID_FACECOLOR:
+//			color_mode = BRUSH;
+//			hBrush = CreateSolidBrush(ColorSelection(hWnd, color_mode));
+//			break;
+//		}
+//		break;
+//
 //	case WM_DESTROY:
 //		PostQuitMessage(0);
 //		break;
 //	}
-//	return DefWindowProc(hwnd, iMsg, wParam, lParam);
+//
+//	return DefWindowProc(hWnd, iMsg, wParam, lParam);
 //}
