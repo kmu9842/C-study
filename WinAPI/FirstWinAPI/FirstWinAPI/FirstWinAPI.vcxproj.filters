@@ -63,6 +63,12 @@
     <ClCompile Include="Source15.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Source16.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Source17.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -94,6 +100,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="..\..\..\..\..\..\Desktop\navi - 복사본.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\..\Pictures\1365522577.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

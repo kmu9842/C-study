@@ -69,54 +69,67 @@
 //	return (int)Message.wParam;
 //}
 //
-//enum {
-//	WIDTH = 55, HEIGHT = 55
-//};
-//
 //LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 //{
-//	HDC hdc, memdc;
+//	HDC hdc, memdc, memBackdc;
 //	PAINTSTRUCT ps;
 //	int i;
 //
-//	static int x[50], y[50], count;
-//	static HBITMAP bg, navi, mask;
+//	static int x, y;
+//	static HBITMAP bg, navi, mask, odbg;
+//
+//	char s[14] = "hello world";
 //
 //	switch (iMsg) {
 //
 //	case WM_CREATE:
+//		odbg = (HBITMAP)LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP6));
 //		bg = (HBITMAP)LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP6));
-//		navi = (HBITMAP)LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP4));
-//		mask = (HBITMAP)LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP7));
-//		count = 0;
+//
+//		SetTimer(hwnd, 1, 0.5f, NULL);
+//		//count = 0;
 //		break;
 //
 //	case WM_PAINT:
 //		hdc = BeginPaint(hwnd, &ps);
 //
 //		memdc = CreateCompatibleDC(hdc);
+//		memBackdc = CreateCompatibleDC(memdc);
+//
+//		bg = (HBITMAP)SelectObject(memdc, bg);
+//		odbg = (HBITMAP)SelectObject(memBackdc, bg);
+//
+//		BitBlt(hdc, 0, 0, 1280, 768, memBackdc, 0, 0, SRCCOPY);
+//		SetBkMode(memdc, TRANSPARENT);
+//		TextOutA(hdc, 100, y, (LPCSTR)"hello world", strlen("hello world"));
+//
+//		odbg = (HBITMAP)SelectObject(memdc, bg);
+//
+//
 //		SelectObject(memdc, bg);
-//		BitBlt(hdc, 0, 0, 1024, 768, memdc, 0, 0, SRCCOPY);
-//		for (i = 0; i<count; i++) {
-//			SelectObject(memdc, mask);
-//			BitBlt(hdc, x[i], y[i], WIDTH, HEIGHT, memdc, 0, 0, SRCAND);
-//			SelectObject(memdc, navi);
-//			BitBlt(hdc, x[i], y[i], WIDTH, HEIGHT, memdc, 0, 0, SRCPAINT);
-//		}
 //		DeleteDC(memdc);
+//		SelectObject(memBackdc, bg);
+//		DeleteDC(memBackdc);
+//
 //
 //		EndPaint(hwnd, &ps);
+//		break;
 //
-//		return 0;
+//	case WM_TIMER:
+//		y++;
+//		if (y >= 1200) {
+//			y = 0;
+//		}
+//		InvalidateRgn(hwnd, NULL, TRUE);
+//		break;
 //
 //	case WM_LBUTTONDOWN:
 //
-//		x[count] = LOWORD(lParam);
-//		y[count] = HIWORD(lParam);
+//		//x[count] = LOWORD(lParam);
+//		//y[count] = HIWORD(lParam);
 //
-//		count++;
+//		//count++;
 //
-//		InvalidateRgn(hwnd, NULL, TRUE);
 //		break;
 //
 //	case WM_DESTROY:

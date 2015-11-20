@@ -86,6 +86,8 @@
     <ClCompile Include="Source13.cpp" />
     <ClCompile Include="Source14.cpp" />
     <ClCompile Include="Source15.cpp" />
+    <ClCompile Include="Source16.cpp" />
+    <ClCompile Include="Source17.cpp" />
     <ClCompile Include="Source2.cpp" />
     <ClCompile Include="Source3.cpp" />
     <ClCompile Include="Source4.cpp" />
@@ -106,6 +108,7 @@
     <Image Include="..\..\..\..\..\..\desktop\bitmap5.bmp" />
     <Image Include="..\..\..\..\..\..\Desktop\navi - 복사본.bmp" />
     <Image Include="..\..\..\..\..\..\Desktop\navi.bmp" />
+    <Image Include="..\..\..\..\..\..\Pictures\1365522577.bmp" />
     <Image Include="bitmap1.bmp" />
     <Image Include="bitmap2.bmp" />
     <Image Include="bitmap3.bmp" />
