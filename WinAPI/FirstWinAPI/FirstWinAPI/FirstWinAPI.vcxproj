@@ -88,6 +88,7 @@
     <ClCompile Include="Source15.cpp" />
     <ClCompile Include="Source16.cpp" />
     <ClCompile Include="Source17.cpp" />
+    <ClCompile Include="Source18.cpp" />
     <ClCompile Include="Source2.cpp" />
     <ClCompile Include="Source3.cpp" />
     <ClCompile Include="Source4.cpp" />
@@ -98,20 +99,13 @@
     <ClCompile Include="Source9.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmap1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\..\..\Desktop\bg.bmp" />
-    <Image Include="..\..\..\..\..\..\desktop\bitmap5.bmp" />
-    <Image Include="..\..\..\..\..\..\Desktop\navi - 복사본.bmp" />
-    <Image Include="..\..\..\..\..\..\Desktop\navi.bmp" />
-    <Image Include="..\..\..\..\..\..\Pictures\1365522577.bmp" />
-    <Image Include="bitmap1.bmp" />
-    <Image Include="bitmap2.bmp" />
-    <Image Include="bitmap3.bmp" />
+    <ResourceCompile Include="FirstWinAPI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

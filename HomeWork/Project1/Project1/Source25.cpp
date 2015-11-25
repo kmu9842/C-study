@@ -179,8 +179,8 @@ Node* sort_partion(Node* start, Node* pivot, Node* big, Node* small) {
 }
 
 void main() {
-	Node* start = new Node(3);
-
+	Node* start = new Node(7);
+	start->insertNode(new Node(3));
 	start->insertNode(new Node(1));
 	start->insertNode(new Node(6));
 	start->insertNode(new Node(2));
